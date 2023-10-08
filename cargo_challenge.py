@@ -43,8 +43,6 @@ T = [
     ['_', 'T', '_'],
 ]
 
-# cargo_shapes = [O, I, S, Z, L, J, T]
-
 cargo_shapes = {'O': O,
                 'I': I,
                 'S': S,
@@ -53,15 +51,49 @@ cargo_shapes = {'O': O,
                 'J': J,
                 'T': T}
 
+deltas = {'O': [(0, 0), (0, -1), (1, 0), (1, -1)],
+                'I': [(0, 0), (0, -1), (0, -2), (0, -3)],
+                'S': [(0, 0), (1, 0), (1, -1), (2, -1)],
+                'Z': [(0, 0), (1, 0), (1, 1), (2, 1)],
+                'L': [(0, 0), (0, -1), (0, -2), (1, 0)],
+                'J': [(0, 0), (1, 0), (1, -1), (1, -2)],
+                'T': [(0, 0), (1, 0), (2, 0), (1, 1)]}
+
 trailer = [[EMPTY] * WIDTH for _ in range(HEIGHT)]
 
-def find_start_pos(trailer, x_axis):
-    for y in range(HEIGHT - 1, -1 , -1):
-        if trailer[y][x_axis] == '_':
-            return x_axis, y
+def get_valid_start(trailer, letter, x, y):
+
+    while y >= 0:
+        all_positions_valid = True
+
+        for delta in deltas[letter]:
+            print('delta ---->', delta)
+            delta_row, delta_column = delta
+            print('delta_row ---->', delta_row)
+            print('delta_column ---->', delta_column)
+            neighbor_row = x + delta_row
+            neighbor_column = y + delta_column
+            print('neighbor_row ---->', neighbor_row)
+            print('neighbor_column ---->', neighbor_column)
+            row_inbounds = 0 <= neighbor_row < WIDTH
+            column_inbounds = 0 <= neighbor_column < HEIGHT
+            print('row_inbounds ---->', row_inbounds)
+            print('column_inbounds ---->', column_inbounds)
+
+            if not (row_inbounds and column_inbounds and trailer[neighbor_column][neighbor_row] == '_'):
+                print('Invalid position found:', neighbor_row, neighbor_column)
+                all_positions_valid = False
+                break
+
+        if all_positions_valid:
+            return x, y
+
+        y -= 1
     return None
 
-def get_cargo_positions(string_shape, x_axis):
+
+
+def get_cargo_positions(string_shape, x):
     shape = cargo_shapes[string_shape]
     positions = {}
     shape_positions = []
@@ -73,7 +105,7 @@ def get_cargo_positions(string_shape, x_axis):
     positions[string_shape] = shape_positions
 
     print('positions ---->', positions)
-    fill_trailer(trailer, positions, x_axis)
+    fill_trailer(trailer, positions, x)
 
 def add_cargo(letter, x, y):
     if letter == 'O':
@@ -94,8 +126,8 @@ def add_cargo(letter, x, y):
     elif letter == 'Z':
         trailer[y][x] = letter
         trailer[y][x + 1] = letter
-        # trailer[y + 1][x + 1] = letter
-        # trailer[y + 1][x + 2] = letter
+        trailer[y + 1][x + 1] = letter
+        trailer[y + 1][x + 2] = letter
     elif letter == 'L':
         trailer[y][x] = letter
         trailer[y - 1][x] = letter
@@ -112,24 +144,15 @@ def add_cargo(letter, x, y):
         trailer[y][x + 2] = letter
         trailer[y - 1][x + 1] = letter
 
-
-
-def fill_trailer(trailer, positions, x_axis):
+def fill_trailer(trailer, positions, x):
     print(trailer)
-    start_pos = find_start_pos(trailer, x_axis)
-    x, y = start_pos
     letter = list(positions.keys())[0]
+    start_pos = get_valid_start(trailer, letter, x, HEIGHT - 1)
+    x, y = start_pos
     print('x:', x)
     print('y:', y)
     print('letter ---->', letter)
     add_cargo(letter, x, y)
-
-    # for cargo in positions.values():
-    #     print('cargo ---->', cargo)
-    #     for (row, col) in cargo:
-    #         print('row ---->', row)
-    #         print('col ---->', col)
-    #         trailer[y - col][x - row] = letter
 
 def print_trailer():
     for row in trailer:
@@ -140,26 +163,11 @@ def main(entries):
     print('entries ---->', entries)
     for entry in entries:
         # print('entry ---->', entry)
-        x_axis = int(entry[0])
+        x = int(entry[0])
         shape = entry[1]
-        # print('x-axis:', x_axis, 'shape:', shape)
-        get_cargo_positions(shape, x_axis)
+        # print('x-axis:', x, 'shape:', shape)
+        get_cargo_positions(shape, x)
     print_trailer()
 
-
-
-# print(trailer)
-
-# main('7S,7I')
-main('7S,7I,5Z')
-
-
-
-
-# shape_pos = convert_shape_format(current_piece)
-
-# # add piece to the grid for drawing
-# for i in range(len(shape_pos)):
-#     x, y = shape_pos[i]
-#     if y > -1:
-#         grid[y][x] = current_piece.color
+main('0O,2I,3S')
+# main('7S,7I,5Z')
