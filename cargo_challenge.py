@@ -75,6 +75,45 @@ def get_cargo_positions(string_shape, x_axis):
     print('positions ---->', positions)
     fill_trailer(trailer, positions, x_axis)
 
+def add_cargo(letter, x, y):
+    if letter == 'O':
+        trailer[y][x] = letter
+        trailer[y - 1][x] = letter
+        trailer[y][x + 1] = letter
+        trailer[y - 1][x + 1] = letter
+    elif letter == 'I':
+        trailer[y][x] = letter
+        trailer[y - 1][x] = letter
+        trailer[y - 2][x] = letter
+        trailer[y - 3][x] = letter
+    elif letter == 'S':
+        trailer[y][x] = letter
+        trailer[y][x + 1] = letter
+        trailer[y - 1][x + 1] = letter
+        trailer[y - 1][x + 2] = letter
+    elif letter == 'Z':
+        trailer[y][x] = letter
+        trailer[y][x + 1] = letter
+        # trailer[y + 1][x + 1] = letter
+        # trailer[y + 1][x + 2] = letter
+    elif letter == 'L':
+        trailer[y][x] = letter
+        trailer[y - 1][x] = letter
+        trailer[y - 2][x] = letter
+        trailer[y - 2][x + 1] = letter
+    elif letter == 'L':
+        trailer[y][x] = letter
+        trailer[y][x + 1] = letter
+        trailer[y + 1][x + 1] = letter
+        trailer[y + 2][x + 1] = letter
+    elif letter == 'T':
+        trailer[y][x] = letter
+        trailer[y][x + 1] = letter
+        trailer[y][x + 2] = letter
+        trailer[y - 1][x + 1] = letter
+
+
+
 def fill_trailer(trailer, positions, x_axis):
     print(trailer)
     start_pos = find_start_pos(trailer, x_axis)
@@ -83,16 +122,14 @@ def fill_trailer(trailer, positions, x_axis):
     print('x:', x)
     print('y:', y)
     print('letter ---->', letter)
+    add_cargo(letter, x, y)
 
-
-
-    for cargo in positions.values():
-        print('cargo ---->', cargo)
-        for (row, col) in cargo:
-            print('row ---->', row)
-            print('col ---->', col)
-            trailer[y - col][x - row] = letter
-        # print('positions[cargo] ---->', positions[cargo])
+    # for cargo in positions.values():
+    #     print('cargo ---->', cargo)
+    #     for (row, col) in cargo:
+    #         print('row ---->', row)
+    #         print('col ---->', col)
+    #         trailer[y - col][x - row] = letter
 
 def print_trailer():
     for row in trailer:
@@ -100,7 +137,6 @@ def print_trailer():
 
 def main(entries):
     entries = entries.split(',')
-    # positions = {}
     print('entries ---->', entries)
     for entry in entries:
         # print('entry ---->', entry)
@@ -114,8 +150,8 @@ def main(entries):
 
 # print(trailer)
 
-main('7S')
-# main('7S,7I,5Z')
+# main('7S,7I')
+main('7S,7I,5Z')
 
 
 
