@@ -18,21 +18,19 @@ def get_valid_start(trailer, letter, x, y):
         all_positions_valid = True
 
         for delta in deltas[letter]:
-            print('delta ---->', delta)
+            # print('delta ---->', delta)
             delta_row, delta_column = delta
-            print('delta_row ---->', delta_row)
-            print('delta_column ---->', delta_column)
+            # print('delta_row ---->', delta_row)
+            # print('delta_column ---->', delta_column)
             neighbor_row = x + delta_row
             neighbor_column = y + delta_column
-            print('neighbor_row ---->', neighbor_row)
+            # print('neighbor_row ---->', neighbor_row)
             print('neighbor_column ---->', neighbor_column)
             row_inbounds = 0 <= neighbor_row < WIDTH
             column_inbounds = 0 <= neighbor_column < HEIGHT
-            print('row_inbounds ---->', row_inbounds)
-            print('column_inbounds ---->', column_inbounds)
 
             if not (row_inbounds and column_inbounds and trailer[neighbor_column][neighbor_row] == '_'):
-                print('Invalid position found:', neighbor_row, neighbor_column)
+                # print('Invalid position found:', neighbor_row, neighbor_column)
                 all_positions_valid = False
                 break
 
@@ -43,21 +41,27 @@ def get_valid_start(trailer, letter, x, y):
     return None
 
 
-def fill_trailer(trailer, letter, x):
-    print(trailer)
+def fill_trailer(trailer, letter, x, lowest_y):
+    # print(trailer)
     # letter = list(positions.keys())[0]
     start_pos = get_valid_start(trailer, letter, x, HEIGHT - 1)
     x, y = start_pos
+
     print('x:', x)
     print('y:', y)
     print('letter ---->', letter)
+    print('lowest_y ---->', lowest_y)
     for delta in deltas[letter]:
         delta_row, delta_column = delta
-        print('delta_row ---->', delta_row)
-        print('delta_column ---->', delta_column)
+        # print('delta_row ---->', delta_row)
+        # print('delta_column ---->', delta_column)
         neighbor_row = x + delta_row
         neighbor_column = y + delta_column
         trailer[neighbor_column][neighbor_row] = letter
+        print('test ---->', neighbor_column < lowest_y)
+        if neighbor_column < lowest_y:
+            lowest_y = neighbor_column
+    return lowest_y
 
 
 def print_trailer():
@@ -67,16 +71,19 @@ def print_trailer():
 
 def main(entries):
     entries = entries.split(',')
+    lowest_y = float('inf')
     print('entries ---->', entries)
     for entry in entries:
         # print('entry ---->', entry)
         x = int(entry[0])
         letter = entry[1]
         # print('x-axis:', x, 'shape:', shape)
-        fill_trailer(trailer, letter, x)
+        lowest_y = fill_trailer(trailer, letter, x, lowest_y)
         # get_cargo_positions(letter, x)
     print_trailer()
+    return HEIGHT - 1 - lowest_y
 
 
-main('0O,2I,3S')
-# main('7S,7I,5Z')
+# print(main('0O,2I,3S'))
+print(main('7S,7I,5Z'))
+# print(main('7S,7I,5Z,5Z,5I,5I'))
