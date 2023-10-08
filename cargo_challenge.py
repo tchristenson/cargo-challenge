@@ -55,8 +55,15 @@ cargo_shapes = {'O': O,
 
 trailer = [[EMPTY] * WIDTH for _ in range(HEIGHT)]
 
-def get_cargo_positions(string_shape, positions):
+def find_start_pos(trailer, x_axis):
+    for y in range(HEIGHT - 1, -1 , -1):
+        if trailer[y][x_axis] == '_':
+            return x_axis, y
+    return None
+
+def get_cargo_positions(string_shape, x_axis):
     shape = cargo_shapes[string_shape]
+    positions = {}
     shape_positions = []
 
     for row in range(len(shape)):
@@ -64,28 +71,51 @@ def get_cargo_positions(string_shape, positions):
             if shape[row][column] == string_shape:
                 shape_positions.append((row, column))
     positions[string_shape] = shape_positions
-    print('positions ---->', positions)
-    return positions
 
-def fill_trailer(entries):
+    print('positions ---->', positions)
+    fill_trailer(trailer, positions, x_axis)
+
+def fill_trailer(trailer, positions, x_axis):
+    print(trailer)
+    start_pos = find_start_pos(trailer, x_axis)
+    x, y = start_pos
+    letter = list(positions.keys())[0]
+    print('x:', x)
+    print('y:', y)
+    print('letter ---->', letter)
+
+
+
+    for cargo in positions.values():
+        print('cargo ---->', cargo)
+        for (row, col) in cargo:
+            print('row ---->', row)
+            print('col ---->', col)
+            trailer[y - col][x - row] = letter
+        # print('positions[cargo] ---->', positions[cargo])
+
+def print_trailer():
+    for row in trailer:
+        print(' '.join(row))
+
+def main(entries):
     entries = entries.split(',')
-    positions = {}
+    # positions = {}
     print('entries ---->', entries)
     for entry in entries:
         # print('entry ---->', entry)
         x_axis = int(entry[0])
         shape = entry[1]
         # print('x-axis:', x_axis, 'shape:', shape)
-        get_cargo_positions(shape, positions)
+        get_cargo_positions(shape, x_axis)
+    print_trailer()
 
-def print_trailer():
-    for row in trailer:
-        print(' '.join(row))
 
-# print_trailer()
+
 # print(trailer)
 
-fill_trailer('7S,7I,5Z')
+main('7S')
+# main('7S,7I,5Z')
 
 
 
