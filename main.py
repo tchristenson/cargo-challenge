@@ -2,6 +2,8 @@ WIDTH = 10
 HEIGHT = 53
 EMPTY = '_'
 
+valid_letters = {'O', 'I', 'S', 'Z', 'L', 'J', 'T'}
+
 deltas = {'O': [(0, 0), (0, -1), (1, 0), (1, -1)],
                 'I': [(0, 0), (0, -1), (0, -2), (0, -3)],
                 'S': [(0, 0), (1, 0), (1, -1), (2, -1)],
@@ -44,6 +46,9 @@ def get_valid_start(trailer, letter, x, y):
 def fill_trailer(trailer, letter, x, lowest_y):
     # print(trailer)
     # letter = list(positions.keys())[0]
+    if letter not in valid_letters:
+        return None
+
     start_pos = get_valid_start(trailer, letter, x, HEIGHT - 1)
 
     if start_pos is None:
@@ -62,10 +67,12 @@ def fill_trailer(trailer, letter, x, lowest_y):
         trailer_row = y + delta_row
         trailer_column = x + delta_column
         trailer[trailer_row][trailer_column] = letter
+        print('lowest_y ---->', lowest_y)
         if trailer_row < lowest_y:
             lowest_y = trailer_row
-        if lowest_y < 0:
+        if lowest_y < 0 or lowest_y == float('inf'):
             return None
+    print('lowest_y ---->', lowest_y)
     return lowest_y
 
 
@@ -88,7 +95,7 @@ def main(entries):
     print_trailer()
 
     if lowest_y is None:
-        return(f"Invalid trailer position for {letter}")
+        return(f"Invalid cargo or invalid trailer position for: {letter}")
 
     return HEIGHT - 1 - lowest_y
 
@@ -97,4 +104,6 @@ def main(entries):
 # print(main('7S,7I,5Z'))
 # print(main('7S,7I,5Z,5Z,5I,5I'))
 # print(main('8T'))
-print(main('5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I'))
+# print(main('5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I'))
+# print(main('0O'))
+print(main('0A'))
