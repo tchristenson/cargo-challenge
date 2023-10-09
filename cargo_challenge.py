@@ -22,15 +22,15 @@ def get_valid_start(trailer, letter, x, y):
             delta_row, delta_column = delta
             # print('delta_row ---->', delta_row)
             # print('delta_column ---->', delta_column)
-            neighbor_row = x + delta_row
-            neighbor_column = y + delta_column
-            # print('neighbor_row ---->', neighbor_row)
-            print('neighbor_column ---->', neighbor_column)
-            row_inbounds = 0 <= neighbor_row < WIDTH
-            column_inbounds = 0 <= neighbor_column < HEIGHT
+            trailer_column = x + delta_row
+            trailer_row = y + delta_column
+            # print('trailer_column ---->', trailer_column)
+            print('trailer_row ---->', trailer_row)
+            row_inbounds = 0 <= trailer_column < WIDTH
+            column_inbounds = 0 <= trailer_row < HEIGHT
 
-            if not (row_inbounds and column_inbounds and trailer[neighbor_column][neighbor_row] == '_'):
-                # print('Invalid position found:', neighbor_row, neighbor_column)
+            if not (row_inbounds and column_inbounds and trailer[trailer_row][trailer_column] == '_'):
+                # print('Invalid position found:', trailer_column, trailer_row)
                 all_positions_valid = False
                 break
 
@@ -45,6 +45,10 @@ def fill_trailer(trailer, letter, x, lowest_y):
     # print(trailer)
     # letter = list(positions.keys())[0]
     start_pos = get_valid_start(trailer, letter, x, HEIGHT - 1)
+
+    if start_pos is None:
+        return None
+
     x, y = start_pos
 
     print('x:', x)
@@ -52,15 +56,16 @@ def fill_trailer(trailer, letter, x, lowest_y):
     print('letter ---->', letter)
     print('lowest_y ---->', lowest_y)
     for delta in deltas[letter]:
-        delta_row, delta_column = delta
-        # print('delta_row ---->', delta_row)
+        delta_column, delta_row = delta
         # print('delta_column ---->', delta_column)
-        neighbor_row = x + delta_row
-        neighbor_column = y + delta_column
-        trailer[neighbor_column][neighbor_row] = letter
-        print('test ---->', neighbor_column < lowest_y)
-        if neighbor_column < lowest_y:
-            lowest_y = neighbor_column
+        # print('delta_row ---->', delta_row)
+        trailer_row = y + delta_row
+        trailer_column = x + delta_column
+        trailer[trailer_row][trailer_column] = letter
+        if trailer_row < lowest_y:
+            lowest_y = trailer_row
+        if lowest_y < 0:
+            return None
     return lowest_y
 
 
@@ -81,9 +86,15 @@ def main(entries):
         lowest_y = fill_trailer(trailer, letter, x, lowest_y)
         # get_cargo_positions(letter, x)
     print_trailer()
+
+    if lowest_y is None:
+        return(f"Invalid trailer position for {letter}")
+
     return HEIGHT - 1 - lowest_y
 
 
 # print(main('0O,2I,3S'))
-print(main('7S,7I,5Z'))
+# print(main('7S,7I,5Z'))
 # print(main('7S,7I,5Z,5Z,5I,5I'))
+# print(main('8T'))
+print(main('5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I'))
