@@ -17,7 +17,8 @@ trailer = [[EMPTY] * WIDTH for _ in range(HEIGHT)]
 def main(entries):
     """
     Loads cargo into the trailer based on input entries and calculates the highest
-    0-indexed y-coordinate that has an occupied square.
+    0-indexed y-coordinate that has an occupied square. For valid entries, a visual
+    representation of the trailer is also printed to the console.
 
     Args:
         entries (str): A comma-separated string of cargo entries (e.g., "0O,2I,3S").
@@ -32,21 +33,18 @@ def main(entries):
 
     entries = entries.strip().split(',')
 
-    print('entries ---->', entries)
     lowest_y = float('inf')
     for entry in entries:
-        print('entry ---->', entry)
         if len(entry) != 2:
             return -1
         x = int(entry[:-1])
         letter = entry[-1]
-        print('x-axis:', x, 'letter:', letter)
         lowest_y = fill_trailer(trailer, letter, x, lowest_y)
-    print_trailer()
 
     if lowest_y is None:
         return -1
 
+    print_trailer()
     return HEIGHT - 1 - lowest_y
 
 
@@ -77,23 +75,16 @@ def fill_trailer(trailer, letter, x, lowest_y):
 
     x, y = start_pos
 
-    print('x:', x)
-    print('y:', y)
-    print('letter ---->', letter)
-    print('lowest_y ---->', lowest_y)
     for delta in deltas[letter]:
         delta_column, delta_row = delta
-        # print('delta_column ---->', delta_column)
-        # print('delta_row ---->', delta_row)
         trailer_row = y + delta_row
         trailer_column = x + delta_column
         trailer[trailer_row][trailer_column] = letter
-        print('lowest_y ---->', lowest_y)
         if trailer_row < lowest_y:
             lowest_y = trailer_row
         if lowest_y < 0 or lowest_y == float('inf'):
             return None
-    print('lowest_y ---->', lowest_y)
+
     return lowest_y
 
 
@@ -116,19 +107,12 @@ def get_valid_start(trailer, letter, x, y):
         all_positions_valid = True
 
         for delta in deltas[letter]:
-            # print('delta ---->', delta)
             delta_row, delta_column = delta
-            # print('delta_row ---->', delta_row)
-            # print('delta_column ---->', delta_column)
             trailer_column = x + delta_row
             trailer_row = y + delta_column
-            # print('trailer_column ---->', trailer_column)
-            print('trailer_row ---->', trailer_row)
             row_inbounds = 0 <= trailer_column < WIDTH
             column_inbounds = 0 <= trailer_row < HEIGHT
-
             if not (row_inbounds and column_inbounds and trailer[trailer_row][trailer_column] == '_'):
-                # print('Invalid position found:', trailer_column, trailer_row)
                 all_positions_valid = False
                 break
 
@@ -150,7 +134,7 @@ def clear_trailer():
 
 
 # # Test Cases
-# print(main('0O,2I,3S'))
+print(main('0O,2I,3S'))
 # print(main('7S,7I,5Z'))
 # print(main('5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I'))
 # print(main('5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I'))
@@ -164,4 +148,4 @@ def clear_trailer():
 # print(main('5'))
 # print(main('Z'))
 # print(main('5Z'))
-# print(main('5T,5I,2O,3S,7Z,1J,4L,7T,9I,3O,5Z,2L,3T,2Z,7S,1I,1T,4L,6J'))
+# print(main('5T,5I,2O,3S,7Z,1J,4L,7T,9I,3O,5Z,2L,3T,2Z,7S,1I,1T,4L,6J,0O'))

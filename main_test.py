@@ -105,7 +105,7 @@ def test_main():
 
     # Valid
     clear_trailer()
-    entries_15 = "5T,5I,2O,3S,7Z,1J,4L,7T,9I,3O,5Z,2L,3T,2Z,7S,1I,1T,4L,6J"
+    entries_15 = "5T,5I,2O,3S,7Z,1J,4L,7T,9I,3O,5Z,2L,3T,2Z,7S,1I,1T,4L,6J,0O"
     expected_result_15 = 12
     assert main(entries_15) == expected_result_15
 
