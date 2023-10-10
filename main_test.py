@@ -109,6 +109,12 @@ def test_main():
     expected_result_15 = 12
     assert main(entries_15) == expected_result_15
 
+    # Invalid - multiple cargo letters
+    clear_trailer()
+    entries_15 = "5TT"
+    expected_result_15 = -1
+    assert main(entries_15) == expected_result_15
+
 if __name__ == "__main__":
     test_get_valid_start()
     test_fill_trailer()
