@@ -45,7 +45,7 @@ def test_main():
 
     # Invalid - negative x value
     clear_trailer()
-    entries_5 = "-10Z"
+    entries_5 = "-6Z"
     expected_result_5 = -1
     assert main(entries_5) == expected_result_5
 
@@ -69,9 +69,45 @@ def test_main():
 
     # Invalid - selected letter overflows trailer horizontally at provided x coordinate
     clear_trailer()
-    entries_8 = "8T"
-    expected_result_8 = -1
-    assert main(entries_8) == expected_result_8
+    entries_9 = "8T"
+    expected_result_9 = -1
+    assert main(entries_9) == expected_result_9
+
+    # Invalid - empty string passed as the cargo entries
+    clear_trailer()
+    entries_10 = ""
+    expected_result_10 = -1
+    assert main(entries_10) == expected_result_10
+
+    # Invalid - spaces passed as the cargo entries
+    clear_trailer()
+    entries_11 = "   "
+    expected_result_11 = -1
+    assert main(entries_11) == expected_result_11
+
+    # Invalid - incorrect entry (excludes cargo type)
+    clear_trailer()
+    entries_12 = "5"
+    expected_result_12 = -1
+    assert main(entries_12) == expected_result_12
+
+    # Invalid - incorrect entry (excludes x axis)
+    clear_trailer()
+    entries_13 = "Z"
+    expected_result_13 = -1
+    assert main(entries_13) == expected_result_13
+
+    # Valid
+    clear_trailer()
+    entries_14 = "5Z"
+    expected_result_14 = 1
+    assert main(entries_14) == expected_result_14
+
+    # Valid
+    clear_trailer()
+    entries_15 = "5T,5I,2O,3S,7Z,1J,4L,7T,9I,3O,5Z,2L,3T,2Z,7S,1I,1T,4L,6J"
+    expected_result_15 = 12
+    assert main(entries_15) == expected_result_15
 
 if __name__ == "__main__":
     test_get_valid_start()
