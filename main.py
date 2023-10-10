@@ -44,9 +44,9 @@ def get_valid_start(trailer, letter, x, y):
 
 
 def fill_trailer(trailer, letter, x, lowest_y):
-    # print(trailer)
-    # letter = list(positions.keys())[0]
     if letter not in valid_letters:
+        return None
+    if not 0 <= x <= 9:
         return None
 
     start_pos = get_valid_start(trailer, letter, x, HEIGHT - 1)
@@ -86,24 +86,29 @@ def main(entries):
     lowest_y = float('inf')
     print('entries ---->', entries)
     for entry in entries:
-        # print('entry ---->', entry)
-        x = int(entry[0])
-        letter = entry[1]
-        # print('x-axis:', x, 'shape:', shape)
+        print('entry ---->', entry)
+        x = int(entry[:-1])
+        letter = entry[-1]
+        print('x-axis:', x, 'letter:', letter)
         lowest_y = fill_trailer(trailer, letter, x, lowest_y)
         # get_cargo_positions(letter, x)
     print_trailer()
 
     if lowest_y is None:
-        return(f"Invalid cargo or invalid trailer position for: {letter}")
+        # return(f"Invalid cargo or invalid trailer position for: {letter}")
+        return -1
 
     return HEIGHT - 1 - lowest_y
+
+def clear_trailer():
+    global trailer
+    trailer = [[EMPTY] * WIDTH for _ in range(HEIGHT)]
 
 
 # print(main('0O,2I,3S'))
 # print(main('7S,7I,5Z'))
 # print(main('7S,7I,5Z,5Z,5I,5I'))
 # print(main('8T'))
-# print(main('5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I'))
-# print(main('0O'))
-print(main('0A'))
+# print(main('5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I,5I'))
+# print(main('-10O'))
+# print(main('5A'))
